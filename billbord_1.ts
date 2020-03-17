@@ -31,7 +31,7 @@ async function Start() {
   // 実行前にダウンロードフォルダを全て削除する
   await RPA.File.rimraf({ dirPath: `${process.env.WORKSPACE_DIR}` });
   // デバッグログを最小限にする
-  RPA.Logger.level = 'INFO';
+  //RPA.Logger.level = 'INFO';
   await RPA.Google.authorize({
     //accessToken: process.env.GOOGLE_ACCESS_TOKEN,
     refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
