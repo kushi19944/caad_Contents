@@ -19,7 +19,7 @@ const ErrorText = [];
 
 async function Test() {
   // デバッグログを最小限にする
-  RPA.Logger.level = 'INFO';
+  //RPA.Logger.level = 'INFO';
   await RPA.Google.authorize({
     //accessToken: process.env.GOOGLE_ACCESS_TOKEN,
     refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
@@ -128,12 +128,17 @@ async function AdxLogin() {
     const data = await (await RPA.WebBrowser.driver).getPageSource();
     console.log(data);
     // ログインページ のボタンをクリック
-    const Button1 = await RPA.WebBrowser.wait(
-      RPA.WebBrowser.Until.elementLocated({ className: 'btn btn-primary' }),
-      5000
-    );
-    await RPA.sleep(1000);
-    await RPA.WebBrowser.mouseClick(Button1);
+    try {
+      await RPA.Logger.info('ログインボタン検索');
+      const Button1 = await RPA.WebBrowser.wait(
+        RPA.WebBrowser.Until.elementLocated({ className: 'btn btn-primary' }),
+        5000
+      );
+      await RPA.sleep(1000);
+      await RPA.WebBrowser.mouseClick(Button1);
+    } catch {
+      RPA.Logger.info(`ログインボタン見つかりません`);
+    }
     await RPA.sleep(2000);
     const UserID = await RPA.WebBrowser.wait(
       RPA.WebBrowser.Until.elementLocated({ xpath: '//*[@id="username"]' }),
