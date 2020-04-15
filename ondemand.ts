@@ -124,7 +124,9 @@ async function TokusyuuSetting(Data, URL) {
 async function AdxLogin() {
   try {
     await RPA.WebBrowser.get(Ondemand_PageURL);
-    await RPA.sleep(2000);
+    await RPA.sleep(5000);
+    const data = await (await RPA.WebBrowser.driver).getPageSource();
+    console.log(data);
     // ログインページ のボタンをクリック
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementsByClassName('jumbotron')[0].children[1].click()`
@@ -143,7 +145,7 @@ async function AdxLogin() {
       '/html/body/div/div[2]/div/form/div[6]/a'
     );
     await RPA.WebBrowser.mouseClick(LoginButton2);
-    await RPA.sleep(2500);
+    await RPA.sleep(4000);
   } catch (ErrorMess) {
     ErrorText[0] = ErrorMess;
   }
