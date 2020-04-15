@@ -23,11 +23,11 @@ async function Test() {
     //accessToken: process.env.GOOGLE_ACCESS_TOKEN,
     refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
     tokenType: 'Bearer',
-    expiryDate: parseInt(process.env.GOOGLE_EXPIRY_DATE, 10)
+    expiryDate: parseInt(process.env.GOOGLE_EXPIRY_DATE, 10),
   });
   let firstdata = await RPA.Google.Spreadsheet.getValues({
     spreadsheetId: `${SSID}`,
-    range: `${SSName1}!A1:G1000`
+    range: `${SSName1}!A1:G1000`,
   });
   const Data1 = [];
   const Data2 = [];
@@ -124,7 +124,7 @@ async function AdxLogin() {
   await RPA.WebBrowser.get(Ondemand_PageURL);
   const LoginBUtton1 = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementLocated({
-      xpath: '//*[@id="root"]/section/section/div/div/a'
+      xpath: '//*[@id="root"]/section/section/div/div/a',
     }),
     5000
   );
@@ -147,20 +147,22 @@ async function AdxLogin() {
 
 // アイテムグループ(特集)を消す関数
 async function ItemDelete() {
-  let DeleteButton = await RPA.WebBrowser.wait(
+  await RPA.sleep(2000);
+  let PanelHeading = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementLocated({
-      xpath:
-        '//*[@id="root"]/div/section/section/div/div[2]/form/div[8]/div/div/div[2]/div[1]/span/span[2]/button'
+      className: 'panel-heading',
     }),
-    5000
+    15000
   );
   for (let i = 0; i < 100; i++) {
     try {
       await RPA.WebBrowser.scrollTo({
-        xpath:
-          '//*[@id="root"]/div/section/section/div/div[2]/form/div[8]/div/div/div[2]/div[1]/span/span[2]/button'
+        selector: `#root > div > section > section > div > div.form-contens > form > div:nth-child(8) > div > div > div.panel-heading`,
       });
-      await RPA.WebBrowser.mouseClick(DeleteButton);
+      // 特集の削除ボタンクリック
+      await RPA.WebBrowser.driver.executeScript(
+        'document.getElementsByClassName(`list-group`)[0].children[0].children[0].children[1].children[0].click()'
+      );
       await RPA.sleep(50);
     } catch {
       break;
@@ -189,7 +191,7 @@ async function ItemSetting(Data, NewData) {
   for (let i in Data) {
     await RPA.WebBrowser.scrollTo({
       xpath:
-        '//*[@id="root"]/div/section/section/div/div[2]/form/div[9]/div/span/span/span[1]/span/ul/li/input'
+        '//*[@id="root"]/div/section/section/div/div[2]/form/div[9]/div/span/span/span[1]/span/ul/li/input',
     });
     await RPA.WebBrowser.driver.executeScript(
       `document.getElementsByClassName('select2-search__field')[0].value = '${Data[i][6]}'`
@@ -198,7 +200,7 @@ async function ItemSetting(Data, NewData) {
     await RPA.WebBrowser.sendKeys(ItemInput, [await RPA.WebBrowser.Key.SPACE]);
     await RPA.sleep(50);
     await RPA.WebBrowser.sendKeys(ItemInput, [
-      await RPA.WebBrowser.Key.BACK_SPACE
+      await RPA.WebBrowser.Key.BACK_SPACE,
     ]);
     await RPA.sleep(300);
     // アイテムインプットにて、No results found の文字が出たら消す
@@ -211,7 +213,7 @@ async function ItemSetting(Data, NewData) {
       await RPA.Google.Spreadsheet.setValues({
         spreadsheetId: `${SSID}`,
         range: `${SSName1}!A${Data[i][7]}:A${Data[i][7]}`,
-        values: [[`【エラー】特集不一致`]]
+        values: [[`【エラー】特集不一致`]],
       });
       await RPA.sleep(300);
       continue;
@@ -221,7 +223,7 @@ async function ItemSetting(Data, NewData) {
       NewData.push(Data[i]);
       await RPA.sleep(50);
       await RPA.WebBrowser.sendKeys(ItemInput, [
-        await RPA.WebBrowser.Key.ENTER
+        await RPA.WebBrowser.Key.ENTER,
       ]);
       await RPA.sleep(100);
       await RPA.WebBrowser.mouseClick(AppendButton[0]);
@@ -244,7 +246,7 @@ async function PageMoving(i, URL) {
   );
   const EditButton = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementsLocated({
-      className: 'btn btn-sm btn-warning btn-block'
+      className: 'btn btn-sm btn-warning btn-block',
     }),
     5000
   );
@@ -263,7 +265,7 @@ async function EditSegments(NewData) {
   await RPA.sleep(300);
   var headerText = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementsLocated({
-      className: 'form-header'
+      className: 'form-header',
     }),
     5000
   );
@@ -305,14 +307,14 @@ async function EditSegments(NewData) {
     for (let x in SegmentDatas) {
       await RPA.WebBrowser.scrollTo({
         xpath:
-          '//*[@id="root"]/div/section/section/div/div[2]/form/div[4]/div/span/span/span[1]/span/ul/li/input'
+          '//*[@id="root"]/div/section/section/div/div[2]/form/div[4]/div/span/span/span[1]/span/ul/li/input',
       });
       await RPA.WebBrowser.sendKeys(InputList[SegmemtInput[0]], [
-        SegmentDatas[x]
+        SegmentDatas[x],
       ]);
       await RPA.sleep(50);
       await RPA.WebBrowser.sendKeys(InputList[SegmemtInput[0]], [
-        RPA.WebBrowser.Key.ENTER
+        RPA.WebBrowser.Key.ENTER,
       ]);
       await RPA.sleep(90);
       await RPA.WebBrowser.mouseClick(SegmemtInputButton[0]);
@@ -320,19 +322,19 @@ async function EditSegments(NewData) {
   } else {
     await RPA.WebBrowser.scrollTo({
       xpath:
-        '//*[@id="root"]/div/section/section/div/div[2]/form/div[4]/div/span/span/span[1]/span/ul/li/input'
+        '//*[@id="root"]/div/section/section/div/div[2]/form/div[4]/div/span/span/span[1]/span/ul/li/input',
     });
     await RPA.WebBrowser.sendKeys(InputList[SegmemtInput[0]], [SegmentData]);
     await RPA.sleep(50);
     await RPA.WebBrowser.sendKeys(InputList[SegmemtInput[0]], [
-      RPA.WebBrowser.Key.ENTER
+      RPA.WebBrowser.Key.ENTER,
     ]);
     await RPA.sleep(90);
     await RPA.WebBrowser.mouseClick(SegmemtInputButton[0]);
   }
   // 入稿物 の欄までスクロール
   await RPA.WebBrowser.scrollTo({
-    xpath: '//*[@id="select2-operationId-container"]'
+    xpath: '//*[@id="select2-operationId-container"]',
   });
   await RPA.sleep(110);
   const text1 = await RPA.WebBrowser.findElementById(
@@ -351,7 +353,7 @@ async function EditSegments(NewData) {
         await RPA.sleep(1000);
         const OptionList = await RPA.WebBrowser.wait(
           RPA.WebBrowser.Until.elementsLocated({
-            className: `select2-results__option`
+            className: `select2-results__option`,
           }),
           15000
         );
@@ -372,7 +374,7 @@ async function EditSegments(NewData) {
         await RPA.Google.Spreadsheet.setValues({
           spreadsheetId: `${SSID}`,
           range: `${SSName1}!A${NewData[7]}:A${NewData[7]}`,
-          values: [[`【エラー】入稿物設定エラー`]]
+          values: [[`【エラー】入稿物設定エラー`]],
         });
         await RPA.sleep(300);
         return;
@@ -383,7 +385,7 @@ async function EditSegments(NewData) {
     // 取得件数 の Input要素
     const Jouken = await RPA.WebBrowser.wait(
       RPA.WebBrowser.Until.elementLocated({
-        id: `queryParams.take_n`
+        id: `queryParams.take_n`,
       }),
       5000
     );
@@ -404,7 +406,7 @@ async function EditSegments(NewData) {
         await RPA.sleep(1000);
         const SortOption = await RPA.WebBrowser.wait(
           RPA.WebBrowser.Until.elementsLocated({
-            className: `select2-results__option`
+            className: `select2-results__option`,
           }),
           15000
         );
@@ -423,7 +425,7 @@ async function EditSegments(NewData) {
         await RPA.Google.Spreadsheet.setValues({
           spreadsheetId: `${SSID}`,
           range: `${SSName1}!A${NewData[7]}:A${NewData[7]}`,
-          values: [[`【エラー】ソート順設定エラー`]]
+          values: [[`【エラー】ソート順設定エラー`]],
         });
         await RPA.sleep(300);
         return;
@@ -452,13 +454,13 @@ async function EditSegments(NewData) {
   await RPA.Google.Spreadsheet.setValues({
     spreadsheetId: `${SSID}`,
     range: `${SSName1}!A${NewData[7]}:A${NewData[7]}`,
-    values: [[`【完了】`]]
+    values: [[`【完了】`]],
   });
   await RPA.sleep(100);
   try {
     const EditButton = await RPA.WebBrowser.wait(
       RPA.WebBrowser.Until.elementsLocated({
-        className: `btn btn-sm btn-warning btn-block`
+        className: `btn btn-sm btn-warning btn-block`,
       }),
       3500
     );
@@ -472,6 +474,6 @@ async function SlackPost(Text) {
     token: BotToken,
     text: `${Text}`,
     icon_emoji: ':snowman:',
-    username: 'p1'
+    username: 'p1',
   });
 }
