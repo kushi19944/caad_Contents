@@ -128,10 +128,13 @@ async function AdxLogin() {
     const data = await (await RPA.WebBrowser.driver).getPageSource();
     console.log(data);
     // ログインページ のボタンをクリック
-    await RPA.WebBrowser.driver.executeScript(
-      `document.getElementsByClassName('jumbotron')[0].children[1].click()`
+    const Button1 = await RPA.WebBrowser.wait(
+      RPA.WebBrowser.Until.elementLocated({ className: 'btn btn-primary' }),
+      5000
     );
-    await RPA.sleep(3000);
+    await RPA.sleep(1000);
+    await RPA.WebBrowser.mouseClick(Button1);
+    await RPA.sleep(2000);
     const UserID = await RPA.WebBrowser.wait(
       RPA.WebBrowser.Until.elementLocated({ xpath: '//*[@id="username"]' }),
       5000
