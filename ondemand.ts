@@ -19,7 +19,7 @@ const ErrorText = [];
 
 async function Test() {
   // デバッグログを最小限にする
-  //RPA.Logger.level = 'INFO';
+  RPA.Logger.level = 'INFO';
   await RPA.Google.authorize({
     //accessToken: process.env.GOOGLE_ACCESS_TOKEN,
     refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
@@ -93,7 +93,7 @@ async function Test() {
     await RPA.WebBrowser.takeScreenshot();
     await RPA.SystemLogger.error(error);
   } finally {
-    //await SlackPost(SlackText[0]);
+    await SlackPost(SlackText[0]);
     await RPA.WebBrowser.quit();
   }
 }
@@ -125,8 +125,6 @@ async function AdxLogin() {
   try {
     await RPA.WebBrowser.get(Ondemand_PageURL);
     await RPA.sleep(5000);
-    const data = await (await RPA.WebBrowser.driver).getPageSource();
-    console.log(data);
     // ログインページ のボタンをクリック
     try {
       await RPA.Logger.info('ログインボタン検索');
@@ -154,6 +152,8 @@ async function AdxLogin() {
     );
     await RPA.WebBrowser.mouseClick(LoginButton2);
     await RPA.sleep(4000);
+    // 社員情報にアクセス 許可かどうか聞かれることがあるためスクショ取って確認できるように
+    await RPA.WebBrowser.takeScreenshot();
   } catch (ErrorMess) {
     ErrorText[0] = ErrorMess;
   }
@@ -161,7 +161,7 @@ async function AdxLogin() {
 
 // アイテムグループ(特集)を消す関数
 async function ItemDelete() {
-  await RPA.sleep(2000);
+  await RPA.sleep(4000);
   let PanelHeading = await RPA.WebBrowser.wait(
     RPA.WebBrowser.Until.elementLocated({
       className: 'panel-heading',
