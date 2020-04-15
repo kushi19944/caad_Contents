@@ -15,6 +15,7 @@ const BotChannel = process.env.Contents_Slack_Channel;
 //const BotChannel = process.env.RPA_Test_Channel;
 
 const SlackText = ['特集設定 完了しました A列のフラグ確認をお願いします'];
+const ErrorText = [];
 
 async function Test() {
   // デバッグログを最小限にする
@@ -75,7 +76,7 @@ async function Test() {
     }
   }
   try {
-    await SlackPost('特集設定 RPA開始します');
+    //await SlackPost('特集設定 RPA開始します');
     await AdxLogin();
     await TokusyuuSetting(Data1, '551');
     await TokusyuuSetting(Data2, '552');
@@ -92,7 +93,7 @@ async function Test() {
     await RPA.WebBrowser.takeScreenshot();
     await RPA.SystemLogger.error(error);
   } finally {
-    await SlackPost(SlackText[0]);
+    //await SlackPost(SlackText[0]);
     await RPA.WebBrowser.quit();
   }
 }
@@ -121,28 +122,31 @@ async function TokusyuuSetting(Data, URL) {
 
 //Adxにログインする
 async function AdxLogin() {
-  await RPA.WebBrowser.get(Ondemand_PageURL);
-  const LoginBUtton1 = await RPA.WebBrowser.wait(
-    RPA.WebBrowser.Until.elementLocated({
-      xpath: '//*[@id="root"]/section/section/div/div/a',
-    }),
-    5000
-  );
-  RPA.WebBrowser.mouseClick(LoginBUtton1);
-  const UserID = await RPA.WebBrowser.wait(
-    RPA.WebBrowser.Until.elementLocated({ xpath: '//*[@id="username"]' }),
-    5000
-  );
-  RPA.WebBrowser.sendKeys(UserID, [Ondemand_UserID]);
-  const UserPass = await RPA.WebBrowser.findElementByXPath(
-    '//*[@id="password"]'
-  );
-  RPA.WebBrowser.sendKeys(UserPass, [Ondemand_UserPW]);
-  const LoginButton2 = await RPA.WebBrowser.findElementByXPath(
-    '/html/body/div/div[2]/div/form/div[6]/a'
-  );
-  await RPA.WebBrowser.mouseClick(LoginButton2);
-  await RPA.sleep(2500);
+  try {
+    await RPA.WebBrowser.get(Ondemand_PageURL);
+    await RPA.sleep(2000);
+    // ログインページ のボタンをクリック
+    await RPA.WebBrowser.driver.executeScript(
+      `document.getElementsByClassName('jumbotron')[0].children[1].click()`
+    );
+    await RPA.sleep(3000);
+    const UserID = await RPA.WebBrowser.wait(
+      RPA.WebBrowser.Until.elementLocated({ xpath: '//*[@id="username"]' }),
+      5000
+    );
+    RPA.WebBrowser.sendKeys(UserID, [Ondemand_UserID]);
+    const UserPass = await RPA.WebBrowser.findElementByXPath(
+      '//*[@id="password"]'
+    );
+    RPA.WebBrowser.sendKeys(UserPass, [Ondemand_UserPW]);
+    const LoginButton2 = await RPA.WebBrowser.findElementByXPath(
+      '/html/body/div/div[2]/div/form/div[6]/a'
+    );
+    await RPA.WebBrowser.mouseClick(LoginButton2);
+    await RPA.sleep(2500);
+  } catch (ErrorMess) {
+    ErrorText[0] = ErrorMess;
+  }
 }
 
 // アイテムグループ(特集)を消す関数
