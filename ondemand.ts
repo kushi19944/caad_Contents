@@ -76,7 +76,7 @@ async function Test() {
     }
   }
   try {
-    //await SlackPost('特集設定 RPA開始します');
+    await SlackPost('特集設定 RPA開始します');
     await AdxLogin();
     await TokusyuuSetting(Data1, '551');
     await TokusyuuSetting(Data2, '552');
