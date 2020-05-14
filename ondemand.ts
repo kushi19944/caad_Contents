@@ -78,6 +78,7 @@ async function Test() {
   try {
     await SlackPost('特集設定 RPA開始します');
     await AdxLogin();
+    await LoginJudge_function();
     await TokusyuuSetting(Data1, '551');
     await TokusyuuSetting(Data2, '552');
     await TokusyuuSetting(Data3, '553');
@@ -156,6 +157,23 @@ async function AdxLogin() {
     await RPA.WebBrowser.takeScreenshot();
   } catch (ErrorMess) {
     ErrorText[0] = ErrorMess;
+  }
+}
+
+// きちんとログイン完了しているか確認
+async function LoginJudge_function() {
+  try {
+    await RPA.Logger.info('ログインボタン再度検索');
+    const Button1 = await RPA.WebBrowser.wait(
+      RPA.WebBrowser.Until.elementLocated({ className: 'btn btn-primary' }),
+      5000
+    );
+    await RPA.sleep(1000);
+    await RPA.WebBrowser.mouseClick(Button1);
+    await RPA.sleep(5000);
+    await RPA.Logger.info(`再度ログイン完了しました`);
+  } catch {
+    RPA.Logger.info(`再度ログインせずにログイン完了`);
   }
 }
 
