@@ -477,6 +477,20 @@ async function EditSegments(NewData) {
     await RPA.sleep(200);
     await RPA.Logger.info('【最低保証件数】4');
   }
+  // 取得件数が20以外なら 20に変更する
+  const Jouken = await RPA.WebBrowser.driver.executeScript(
+    `return document.getElementById('queryParams.take_n').value`
+  );
+  if (Jouken != '20') {
+    const Jouken_ele = await RPA.WebBrowser.findElementById(
+      'queryParams.take_n'
+    );
+    await Jouken_ele.clear();
+    await RPA.sleep(50);
+    await RPA.WebBrowser.sendKeys(Jouken_ele, ['20']);
+    await RPA.sleep(100);
+    await RPA.Logger.info('【取得件数】20');
+  }
   //セグメント更新する処理
   const SegmentKoushinButton = await RPA.WebBrowser.findElementByXPath(
     '//*[@id="root"]/div/section/section/div/div[3]/div/button[1]'
