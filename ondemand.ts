@@ -345,9 +345,26 @@ async function EditSegments(NewData) {
         SegmentDatas[x],
       ]);
       await RPA.sleep(50);
+      // セグメントが完全一致するものをクリックするように変更
+      const SegmentList = await RPA.WebBrowser.wait(
+        RPA.WebBrowser.Until.elementsLocated({
+          className: `select2-results__option`,
+        }),
+        5000
+      );
+      for (let i in SegmentList) {
+        const Text = await SegmentList[i].getText();
+        if (Text == SegmentDatas[x]) {
+          await SegmentList[i].click();
+          RPA.Logger.info(`【${Text}】クリックしました`);
+          break;
+        }
+      }
+      /*
       await RPA.WebBrowser.sendKeys(InputList[SegmemtInput[0]], [
         RPA.WebBrowser.Key.ENTER,
       ]);
+      */
       await RPA.sleep(90);
       await RPA.WebBrowser.mouseClick(SegmemtInputButton[0]);
     }
@@ -358,9 +375,26 @@ async function EditSegments(NewData) {
     });
     await RPA.WebBrowser.sendKeys(InputList[SegmemtInput[0]], [SegmentData]);
     await RPA.sleep(50);
+    // セグメントが完全一致するものをクリックするように変更
+    const SegmentList = await RPA.WebBrowser.wait(
+      RPA.WebBrowser.Until.elementsLocated({
+        className: `select2-results__option`,
+      }),
+      5000
+    );
+    for (let i in SegmentList) {
+      const Text = await SegmentList[i].getText();
+      if (Text == SegmentData) {
+        await SegmentList[i].click();
+        RPA.Logger.info(`【${Text}】クリックしました`);
+        break;
+      }
+    }
+    /*
     await RPA.WebBrowser.sendKeys(InputList[SegmemtInput[0]], [
       RPA.WebBrowser.Key.ENTER,
     ]);
+    */
     await RPA.sleep(90);
     await RPA.WebBrowser.mouseClick(SegmemtInputButton[0]);
   }
