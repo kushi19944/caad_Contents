@@ -182,6 +182,7 @@ async function LoginJudge_function() {
 
 async function Syounin_function() {
   try {
+    await RPA.WebBrowser.takeScreenshot();
     let SyouninButton = await RPA.WebBrowser.wait(
       RPA.WebBrowser.Until.elementLocated({
         className: 'ping-button normal allow',
@@ -194,6 +195,8 @@ async function Syounin_function() {
     await RPA.sleep(5000);
   } catch {
     RPA.Logger.info('承認許可のボタン出現しませんでした.次へ進みます');
+    await RPA.WebBrowser.refresh();
+    await RPA.sleep(5000);
   }
 }
 
@@ -578,5 +581,5 @@ async function SlackPost(Text) {
     username: 'p1',
   });
   */
-  console.log("通知したと想定")
+  console.log('通知したと想定');
 }
