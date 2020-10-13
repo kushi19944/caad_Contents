@@ -574,7 +574,6 @@ async function EditSegments(NewData) {
 }
 
 async function SlackPost(Text) {
-  /*
   // 作業開始時にSlackへ通知する
   await RPA.Slack.chat.postMessage({
     channel: BotChannel,
@@ -583,6 +582,4 @@ async function SlackPost(Text) {
     icon_emoji: ':snowman:',
     username: 'p1',
   });
-  */
-  console.log('通知したと想定');
 }
