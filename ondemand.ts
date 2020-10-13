@@ -80,6 +80,7 @@ async function Test() {
     await AdxLogin();
     await LoginJudge_function();
     await Syounin_function(); // ログインの許可がどうとか聞かれるのでOKする関数
+    RPA.Logger.info('特集設定に進みます');
     await TokusyuuSetting(Data1, '551');
     await TokusyuuSetting(Data2, '552');
     await TokusyuuSetting(Data3, '553');
@@ -104,7 +105,9 @@ Test();
 
 // 特集◯段目 の設定
 async function TokusyuuSetting(Data, URL) {
-  await RPA.WebBrowser.get(process.env.Ondemand_URL_1 + URL);
+  let workURL = process.env.Ondemand_URL_1 + URL;
+  RPA.Logger.info('このページに遷移します', workURL);
+  await RPA.WebBrowser.get(workURL);
   // アイテムグループ(特集)を消す
   await ItemDelete();
   const NewData = [];
