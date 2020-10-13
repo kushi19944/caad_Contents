@@ -190,6 +190,7 @@ async function Syounin_function() {
     );
     RPA.Logger.info('承認許可のボタン出現しました');
     await SyouninButton.click();
+    RPA.Logger.info('承認許可ボタンクリック');
     await RPA.sleep(5000);
   } catch {
     RPA.Logger.info('承認許可のボタン出現しませんでした.次へ進みます');
