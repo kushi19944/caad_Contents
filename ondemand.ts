@@ -79,6 +79,7 @@ async function Test() {
     await SlackPost('特集設定 RPA開始します');
     await AdxLogin();
     await LoginJudge_function();
+    await Syounin_function(); // ログインの許可がどうとか聞かれるのでOKする関数
     await TokusyuuSetting(Data1, '551');
     await TokusyuuSetting(Data2, '552');
     await TokusyuuSetting(Data3, '553');
@@ -139,6 +140,7 @@ async function AdxLogin() {
       RPA.Logger.info(`ログインボタン見つかりません`);
     }
     await RPA.sleep(2000);
+    RPA.Logger.info('CASSO入力開始');
     const UserID = await RPA.WebBrowser.wait(
       RPA.WebBrowser.Until.elementLocated({ xpath: '//*[@id="username"]' }),
       5000
@@ -151,6 +153,7 @@ async function AdxLogin() {
     const LoginButton2 = await RPA.WebBrowser.findElementByXPath(
       '/html/body/div/div[2]/div/form/div[6]/a'
     );
+    RPA.Logger.info('CASSO入力完了');
     await RPA.WebBrowser.mouseClick(LoginButton2);
     await RPA.sleep(4000);
     // 社員情報にアクセス 許可かどうか聞かれることがあるためスクショ取って確認できるように
@@ -174,6 +177,22 @@ async function LoginJudge_function() {
     await RPA.Logger.info(`再度ログイン完了しました`);
   } catch {
     RPA.Logger.info(`再度ログインせずにログイン完了`);
+  }
+}
+
+async function Syounin_function() {
+  try {
+    let SyouninButton = await RPA.WebBrowser.wait(
+      RPA.WebBrowser.Until.elementLocated({
+        className: 'ping-button normal allow',
+      }),
+      6000
+    );
+    RPA.Logger.info('承認許可のボタン出現しました');
+    await SyouninButton.click();
+    await RPA.sleep(5000);
+  } catch {
+    RPA.Logger.info('承認許可のボタン出現しませんでした.次へ進みます');
   }
 }
 
